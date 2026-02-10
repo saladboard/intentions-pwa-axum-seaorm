@@ -1,0 +1,18 @@
+# Rust build artifacts
+/backend/target/
+**/*.rs.bk
+
+# Env / secrets
+.env
+.env.*
+
+# Local data / logs
+*.log
+*.db
+*.sqlite
+*.sqlite3
+
+# OS + editor
+.DS_Store
+.vscode/
+.idea/

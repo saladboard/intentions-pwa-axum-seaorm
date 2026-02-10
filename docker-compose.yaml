@@ -1,0 +1,56 @@
+services:
+  axum:
+    image: rust:1.86-bookworm
+    working_dir: /app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/app
+      RUST_LOG: debug
+      APP_ADDR: 0.0.0.0:3000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/app
+
+      # persist cargo + build outputs to keep dev fast
+      - cargo_registry:/usr/local/cargo/registry
+      - cargo_git:/usr/local/cargo/git
+      - cargo_target:/app/target
+    command: >
+      bash -lc "
+        cargo install cargo-watch --locked || true &&
+        cargo watch -x run
+      "
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: app
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d app"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+
+  # optional: DB UI at http://localhost:8080
+  adminer:
+    image: adminer:4
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:
+  cargo_registry:
+  cargo_git:
+  cargo_target:

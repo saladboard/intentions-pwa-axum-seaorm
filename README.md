@@ -1,6 +1,31 @@
-This is building a personal CRM with a rust backend and and something frontend 
+# Axum + SeaORM (Docker Dev)
 
- Docs will include RFD and building documents (explaining tradeoffs on decisions)
- 
+Minimal local development setup using Docker Compose.
 
-Might be fun to mess around with this on the frontend https://github.com/dioxuslabs/dioxus
+
+
+## Start
+
+```bash
+./dev.sh up
+```
+
+App runs at:
+
+```
+http://localhost:3000/health
+```
+
+---
+
+## Stop
+
+```bash
+docker compose down
+```
+
+Or clean:
+
+```bash
+./dev.sh clean
+```
